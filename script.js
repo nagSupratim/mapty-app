@@ -140,6 +140,8 @@ class App {
     // If workout running, create running object
     if (type === 'running') {
       const cadence = +inputCadence.value;
+      console.log(inputDistance.value);
+      // console.log(areValidNumbers(distance, duration, cadence), arePositiveNumbers(distance, duration, cadence));
       // Check if data is valid
       if (!areValidNumbers(distance, duration, cadence) || !arePositiveNumbers(distance, duration, cadence))
         return alert('Inputs have to be valid positive numbers!');
@@ -225,6 +227,7 @@ class App {
       }
       this._moveToPopup(e);
     } else {
+      if (e.target.closest('.form') === form) return;
       if (!e.target.closest('body').querySelector('.form').classList.contains('hidden')) {
         this._hideForm();
       }
