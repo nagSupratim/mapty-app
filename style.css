@@ -19,7 +19,6 @@ html {
   font-size: 62.5%;
   box-sizing: border-box;
 }
-
 body {
   font-family: 'Manrope', sans-serif;
   color: var(--color-light--2);
@@ -27,19 +26,14 @@ body {
   line-height: 1.6;
   height: 100vh;
   overscroll-behavior-y: none;
-
   background-color: #fff;
-  padding: 2.5rem;
-
-  display: flex;
+  position: relative;
 }
-
 /* GENERAL */
 a:link,
 a:visited {
   color: var(--color-brand--1);
 }
-
 /* SIDEBAR */
 .sidebar {
   flex-basis: 50rem;
@@ -47,70 +41,31 @@ a:visited {
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
-
+.sidebar.hidden {
+  display: none;
+}
 .logo {
   height: 5.2rem;
   align-self: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
-
 .workouts {
   list-style: none;
-  height: 77vh;
+  height: 71.2vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
-
 .workouts::-webkit-scrollbar {
   width: 0;
 }
-
-.workout {
-  background-color: var(--color-dark--2);
-  border-radius: 5px;
-  padding: 1.5rem 2.25rem;
-  margin-bottom: 1.75rem;
-  cursor: pointer;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 0.75rem 1.5rem;
-}
-.workout--running {
-  border-left: 5px solid var(--color-brand--2);
-}
-.workout--cycling {
-  border-left: 5px solid var(--color-brand--1);
-}
-
-.workout__title {
-  font-size: 1.7rem;
-  font-weight: 600;
-  grid-column: 1 / -1;
-}
-
-.workout__details {
-  display: flex;
-  align-items: baseline;
-}
-
-.workout__icon {
-  font-size: 1.8rem;
-  margin-right: 0.2rem;
-  height: 0.28rem;
-}
-
-.workout__value {
-  font-size: 1.5rem;
-  margin-right: 0.5rem;
-}
-
-.workout__unit {
-  font-size: 1.1rem;
-  color: var(--color-light--1);
-  text-transform: uppercase;
-  font-weight: 800;
+.close-btn {
+  position: absolute;
+  font-size: 3rem;
+  right: 1rem;
+  top: 1rem;
+  transition: transform linear 0.3s;
 }
 
 .form {
@@ -120,14 +75,13 @@ a:visited {
   margin-bottom: 1.75rem;
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 0.5rem 2.5rem;
 
   /* Match height and activity boxes */
-  height: 9.25rem;
+  height: 16rem;
   transition: all 0.5s, transform 1ms;
 }
-
 .form.hidden {
   transform: translateY(-30rem);
   height: 0;
@@ -135,22 +89,18 @@ a:visited {
   margin-bottom: 0;
   opacity: 0;
 }
-
 .form__row {
   display: flex;
   align-items: center;
 }
-
 .form__row--hidden {
   display: none;
 }
-
 .form__label {
   flex: 0 0 50%;
   font-size: 1.5rem;
   font-weight: 600;
 }
-
 .form__input {
   width: 100%;
   padding: 0.3rem 1.1rem;
@@ -161,16 +111,63 @@ a:visited {
   background-color: var(--color-light--3);
   transition: all 0.2s;
 }
-
 .form__input:focus {
   outline: none;
   background-color: #fff;
 }
-
 .form__btn {
   display: none;
 }
 
+.workout {
+  background-color: var(--color-dark--2);
+  border-radius: 5px;
+  padding: 1.5rem 2.25rem;
+  margin-bottom: 1.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.workout--running {
+  border-left: 5px solid var(--color-brand--2);
+}
+.workout--cycling {
+  border-left: 5px solid var(--color-brand--1);
+}
+.workout__title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+.all-workout__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+}
+.all-workout__details.hidden {
+  display: none;
+}
+.workout__details {
+  display: flex;
+  align-items: baseline;
+}
+.workout__icon {
+  font-size: 1.8rem;
+  margin-right: 0.2rem;
+  height: 0.28rem;
+}
+.workout__value {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+.workout__unit {
+  font-size: 1.1rem;
+  color: var(--color-light--1);
+  text-transform: uppercase;
+  font-weight: 800;
+}
 .copyright {
   margin-top: auto;
   font-size: 1.3rem;
@@ -189,28 +186,35 @@ a:visited {
 .links a {
   font-size: 2rem;
 }
-
 .twitter-link:link,
 .twitter-link:visited,
 .links a {
   color: var(--color-light--1);
   transition: all 0.2s;
 }
-
 .twitter-link:hover,
 .twitter-link:active,
 .links a:hover,
 .links a:active {
   color: var(--color-light--2);
 }
-
 /* MAP */
 #map {
   flex: 1;
   height: 100%;
   background-color: var(--color-light--1);
 }
-
+#map.hidden {
+  display: none;
+}
+.map-actions i {
+  font-size: 4rem;
+  color: var(--color-dark--1);
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1000;
+}
 /* Popup width is defined in JS using options */
 .leaflet-popup .leaflet-popup-content-wrapper {
   background-color: var(--color-dark--1);
@@ -232,4 +236,50 @@ a:visited {
 }
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
+}
+
+.leaflet-top.leaflet-left {
+  left: auto;
+  right: 10px;
+}
+@media screen and (min-width: 481px) {
+  body {
+    display: flex;
+    padding: 2.5rem;
+  }
+  .sidebar {
+    position: static;
+  }
+  .sidebar.hidden {
+    display: flex;
+  }
+  .logo {
+    margin-bottom: 4rem;
+  }
+  .workouts {
+    height: 77vh;
+  }
+  .close-btn {
+    display: none !important;
+  }
+  .form {
+    height: 9.25rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  .workout {
+    height: auto;
+    display: block;
+  }
+  .all-workout__details {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .all-workout__details.hidden {
+    display: grid;
+  }
+  #map.hidden {
+    display: block;
+  }
+  .map-actions i {
+    display: none;
+  }
 }

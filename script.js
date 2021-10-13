@@ -1,6 +1,9 @@
 'use strict';
 
 const form = document.querySelector('.form');
+const sidebar = document.querySelector('.sidebar');
+const openSidebarBtn = document.querySelector('.map-actions i');
+const closeSidebarBtn = document.querySelector('.sidebar i');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
 const inputDistance = document.querySelector('.form__input--distance');
@@ -65,7 +68,16 @@ class App {
     // Attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
-    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
+    containerWorkouts.addEventListener('click', this._sidebarOnClicks.bind(this));
+    openSidebarBtn.addEventListener('click', this._openSidebarMobile);
+    closeSidebarBtn.addEventListener('click', this._closeSidebarMobile.bind(this));
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (!form.classList.contains('hidden')) {
+          this._hideForm();
+        }
+      }
+    });
   }
   _getPosition() {
     if (navigator.geolocation) {
@@ -88,6 +100,7 @@ class App {
   }
   _showForm(mapE) {
     this.#mapEvent = mapE;
+    if (sidebar.classList.contains('hidden')) this._openSidebarMobile();
     form.classList.remove('hidden');
     inputDistance.focus();
   }
@@ -97,6 +110,15 @@ class App {
     form.style.display = 'none';
     form.classList.add('hidden');
     setTimeout(() => (form.style.display = 'grid'), 1000);
+  }
+  _openSidebarMobile() {
+    sidebar.classList.remove('hidden');
+    map.classList.add('hidden');
+  }
+  _closeSidebarMobile() {
+    sidebar.classList.add('hidden');
+    map.classList.remove('hidden');
+    this._shrinkAllWorkoutDetails();
   }
   _toggleElevationField() {
     inputDistance.focus();
@@ -167,29 +189,46 @@ class App {
     const html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
       <h2 class="workout__title">${workout.description}</h2>
-      <div class="workout__details">
-        <span class="workout__icon">${typeEmojis[0]}</span>
-        <span class="workout__value">${workout.distance}</span>
-        <span class="workout__unit">km</span>
-      </div>
-      <div class="workout__details">
-        <span class="workout__icon">⏱</span>
-        <span class="workout__value">${workout.duration}</span>
-        <span class="workout__unit">min</span>
-      </div>
-      <div class="workout__details">
-        <span class="workout__icon">⚡️</span>
-        <span class="workout__value">${typeValues[0]}</span>
-        <span class="workout__unit">${typeUnits[0]}</span>
-      </div>
-      <div class="workout__details">
-        <span class="workout__icon">${typeEmojis[1]}</span>
-        <span class="workout__value">${typeValues[1]}</span>
-        <span class="workout__unit">${typeUnits[1]}</span>
+      <div class="all-workout__details hidden">
+        <div class="workout__details">
+          <span class="workout__icon">${typeEmojis[0]}</span>
+          <span class="workout__value">${workout.distance}</span>
+          <span class="workout__unit">km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⏱</span>
+          <span class="workout__value">${workout.duration}</span>
+          <span class="workout__unit">min</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⚡️</span>
+          <span class="workout__value">${typeValues[0]}</span>
+          <span class="workout__unit">${typeUnits[0]}</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">${typeEmojis[1]}</span>
+          <span class="workout__value">${typeValues[1]}</span>
+          <span class="workout__unit">${typeUnits[1]}</span>
+        </div>
       </div>
     </li>
     `;
     form.insertAdjacentHTML('afterend', html);
+  }
+  _sidebarOnClicks(e) {
+    if (e.target.closest('.workout')) {
+      if (e.target.closest('.workout').querySelector('.all-workout__details').classList.contains('hidden')) {
+        this._shrinkAllWorkoutDetails();
+        e.target.closest('.workout').querySelector('.all-workout__details').classList.remove('hidden');
+      } else {
+        e.target.closest('.workout').querySelector('.all-workout__details').classList.add('hidden');
+      }
+      this._moveToPopup(e);
+    } else {
+      if (!e.target.closest('body').querySelector('.form').classList.contains('hidden')) {
+        this._hideForm();
+      }
+    }
   }
   _moveToPopup(e) {
     const workoutEL = e.target.closest('.workout');
@@ -213,6 +252,9 @@ class App {
       this._renderWorkoutItem(workout);
       // load the markers after map loads in _loadMap
     });
+  }
+  _shrinkAllWorkoutDetails() {
+    document.querySelectorAll('.all-workout__details').forEach(workout => workout.classList.add('hidden'));
   }
   reset() {
     localStorage.removeItem('workouts');
