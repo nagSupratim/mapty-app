@@ -140,6 +140,10 @@ class App {
     // If workout running, create running object
     if (type === 'running') {
       const cadence = +inputCadence.value;
+<<<<<<< HEAD
+=======
+      console.log(inputDistance.value);
+>>>>>>> 6ccfdd0f188d837bda41c9b84771cb081e45ca88
       // console.log(areValidNumbers(distance, duration, cadence), arePositiveNumbers(distance, duration, cadence));
       // Check if data is valid
       if (!areValidNumbers(distance, duration, cadence) || !arePositiveNumbers(distance, duration, cadence))
